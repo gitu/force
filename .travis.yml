@@ -3,6 +3,9 @@ go:
 - latest
 before_install:
 - go get github.com/mitchellh/gox
+- go get github.com/gorilla/mux
+- go get gopkg.in/validator.v2
+- go get github.com/justinas/alice
 script:
 - go test ./...
 after_success:

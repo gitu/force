@@ -1,33 +1,31 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/urfave/negroni"
-	"log"
-	"os"
+	"github.com/gitu/force/goraml"
+
+	"github.com/gorilla/mux"
+	"gopkg.in/validator.v2"
 )
 
-var logger *log.Logger
-
 func main() {
-	logger := log.New(os.Stdout, "[force]   ", log.Ldate|log.Ltime|log.Lshortfile)
+	// input validator
+	validator.SetValidationFunc("multipleOf", goraml.MultipleOf)
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, hello())
+	r := mux.NewRouter()
+
+	// home page
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "index.html")
 	})
 
-	n := negroni.Classic() // Includes some default middlewares
-	n.UseHandler(mux)
+	// apidocs
+	r.PathPrefix("/apidocs/").Handler(http.StripPrefix("/apidocs/", http.FileServer(http.Dir("./apidocs/"))))
 
-	listenOn := ":3000"
+	GroupsInterfaceRoutes(r, GroupsAPI{})
 
-	logger.Printf("will listen on %s", listenOn)
-	http.ListenAndServe(listenOn, n)
-}
-
-func hello() string {
-	return "Hello World"
+	log.Println("starting server")
+	http.ListenAndServe(":5000", r)
 }

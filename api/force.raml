@@ -1,0 +1,42 @@
+#%RAML 1.0
+title: FORCe API
+
+mediaType: application/json
+
+types:
+  Group:
+    type: object
+    properties:
+      id: string
+      name: string
+  Groups:
+    type: Group[]
+    minItems: 0
+    uniqueItems: true
+    example:
+      - id: KDO
+        name: Kommando
+      - id: Z1
+        name: Zug 1
+      - id: PN1
+        name: Pikett Nacht 1
+  Entry:
+    type: object
+    properties:
+      id: string
+      name: string
+      groupId: string
+      start: datetime
+      end: datetime
+      type:
+        type: string
+        enum: [mandatory, optional, standby]
+
+
+/groups:
+  description: Collection of albums belonging to the artist
+  get:
+    responses:
+      200:
+        body:
+          type: Groups
