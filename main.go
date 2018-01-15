@@ -24,6 +24,8 @@ func main() {
 	// apidocs
 	r.PathPrefix("/apidocs/").Handler(http.StripPrefix("/apidocs/", http.FileServer(http.Dir("./apidocs/"))))
 
+	EntriesInterfaceRoutes(r, EntriesAPI{})
+
 	GroupsInterfaceRoutes(r, GroupsAPI{})
 
 	log.Println("starting server")

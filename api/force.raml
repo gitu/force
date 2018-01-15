@@ -1,5 +1,6 @@
 #%RAML 1.0
 title: FORCe API
+baseUri: http://localhost:5000/
 
 mediaType: application/json
 
@@ -23,20 +24,57 @@ types:
   Entry:
     type: object
     properties:
-      id: string
       name: string
-      groupId: string
+      group: Group
+      alternativeGroup?:
+        type: string
+        description: all with the same alternativeGroup are alternative entries
       start: datetime
       end: datetime
       type:
         type: string
         enum: [mandatory, optional, standby]
+    example:
+      name: 1. Uebung Zug 1"
+      start: 2018-03-03T20:30:00Z
+      end: 2018-03-03T22:30:00Z
+      alternativeGroup: 2018-ZU1
+      group:
+        id: Z1
+        name: Zug 1
+      type: mandatory
 
 
 /groups:
-  description: Collection of albums belonging to the artist
+  description: Groups of people
   get:
     responses:
       200:
         body:
           type: Groups
+  /{groupId}:
+    get:
+      description: Gets a list of all entries for this group
+      responses:
+        200:
+          body:
+            type: Entry[]
+
+/entries:
+  description: Date Entries of relevance
+  get:
+    queryParameters:
+       groupIds:
+         description: A list of groupIds
+         type: array
+         items:
+           type: string
+           minLength: 1
+         uniqueItems: true
+    responses:
+      200:
+        body:
+          type: Entry[]
+
+
+

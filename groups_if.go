@@ -9,11 +9,15 @@ import (
 )
 
 // GroupsInterface is interface for /groups root endpoint
-type GroupsInterface interface { // Get is the handler for GET /groups
+type GroupsInterface interface { // groupIdGet is the handler for GET /groups/{groupId}
+	// Gets a list of all entries for this group
+	groupIdGet(http.ResponseWriter, *http.Request)
+	// Get is the handler for GET /groups
 	Get(http.ResponseWriter, *http.Request)
 }
 
 // GroupsInterfaceRoutes is routing for /groups root endpoint
 func GroupsInterfaceRoutes(r *mux.Router, i GroupsInterface) {
+	r.HandleFunc("/groups/{groupId}", i.groupIdGet).Methods("GET")
 	r.HandleFunc("/groups", i.Get).Methods("GET")
 }
