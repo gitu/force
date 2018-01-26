@@ -65,5 +65,3 @@ fabric.properties
 *.out
 
 bin/
-
-bindata_assetfs.go
