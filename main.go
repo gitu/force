@@ -12,7 +12,7 @@ import (
 	"io"
 )
 
-//go:generate go-bindata-assetfs -pkg main apidocs/... index.html
+//go:generate go-bindata-assetfs -pkg main apidocs/... index.html entries.json
 
 func serveIndex(rw http.ResponseWriter, req *http.Request) {
 	bs, _ := Asset("index.html")
